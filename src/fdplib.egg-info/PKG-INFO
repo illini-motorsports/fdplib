@@ -1,0 +1,7 @@
+Metadata-Version: 2.1
+Name: fdplib
+Version: 0.2
+Home-page: https://github.com/illini-motorsports/fdplib
+Author: cmmeyer1800
+Author-email: collinmmeyer@gmail.com
+Requires-Python: >=3.6

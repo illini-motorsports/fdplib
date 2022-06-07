@@ -1,0 +1,11 @@
+README
+pyproject.toml
+setup.py
+src/darab/__init__.py
+src/darab/data_proc.py
+src/darab/tools.py
+src/fdplib.egg-info/PKG-INFO
+src/fdplib.egg-info/SOURCES.txt
+src/fdplib.egg-info/dependency_links.txt
+src/fdplib.egg-info/requires.txt
+src/fdplib.egg-info/top_level.txt
