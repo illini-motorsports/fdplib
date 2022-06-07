@@ -1,4 +1,4 @@
-README
+README.md
 pyproject.toml
 setup.py
 src/darab/__init__.py

@@ -8,7 +8,7 @@ setup(
     author='cmmeyer1800',
     author_email='collinmmeyer@gmail.com',
     python_requires = ">=3.6",
-    long_description=open('README').read(),
+    long_description=open('README.md').read(),
     packages= find_packages(
         where='src'
     ),
