@@ -1,10 +1,11 @@
 from setuptools import setup, find_packages
+import os
 
 
 setup(
     name='fdplib',
     url='https://github.com/illini-motorsports/fdplib',
-    version = 0.4,
+    version = 0.5,
     author='cmmeyer1800',
     author_email='collinmmeyer@gmail.com',
     python_requires = ">=3.6",
