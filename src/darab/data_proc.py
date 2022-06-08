@@ -1,6 +1,7 @@
 import src.darab.tools as tools
 import tqdm
 import os
+import numpy as np
 
 class DarabData:
     def __init__(self, filename: str):
@@ -63,6 +64,10 @@ class DarabData:
                     return [list(map(float, [row[0] for row in self.data])), list(map(float,[row[idx] for row in self.data]))]
                 else:
                     return list(map(float,[row[idx] for row in self.data]))
+
+
+    def get_var_np(self, var, timeseries = False):
+        return np.array(self.get_var(var, timeseries))
 
     
     def list_vars(self) -> list:
