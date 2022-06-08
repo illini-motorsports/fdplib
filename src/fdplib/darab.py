@@ -1,7 +1,7 @@
-import src.darab.tools as tools
 import tqdm
-import os
 import numpy as np
+
+letters = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z']
 
 class DarabData:
     def __init__(self, filename: str):
@@ -13,7 +13,7 @@ class DarabData:
 
         except:
             print("Data File Not Able To Load")
-            os.remove(filename)
+            #os.remove(filename)
             quit()
 
         print("Loading Data ...")
@@ -54,7 +54,7 @@ class DarabData:
             return None
 
         else:
-            if self.data[idx][0][0] in tools.letters:
+            if self.data[idx][0][0] in letters:
                 if timeseries:
                     return [list(map(float, [row[0] for row in self.data])), [row[idx] for row in self.data]]
                 else:

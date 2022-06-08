@@ -1,0 +1,10 @@
+name: Push Package to PyPi
+on: [push]
+jobs:
+  Explore-GitHub-Actions:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "The job was automatically triggered by a ${{ github.event_name }} event."
+      - run: rm -r dist
+      - run: python3 -m build
+      - run: python3 -m twine upload -u ${{ secrets.PYPI_USER }} -p ${{ secrets.PYPI_PASS }} dist/*

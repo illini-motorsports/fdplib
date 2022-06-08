@@ -1,7 +1,7 @@
 # Formula Data Processing Library
 ## _The python windarab loader_
 
-###### UNIT TESTS WIP
+UNIT TESTS WIP
 
 Formula data processing library or fdplib for short is a library for accessing the custom text file format exported by Windarab by Bosch Motorsports
 
@@ -17,14 +17,14 @@ python3 -m pip install fdplib
 
 ## Usage
 
-In order to use the main functionality of this library, import the darab module in your python code
+In order to use the main functionality of this library, import the fdplib module in your python code
 ```
-import darab
+import fdplib
 ```
 From this a *DarabData* object can be created by passing the textfile name to the constructor
 ```
-from darab import DarabData
-data = DarabData("<FILENAME>.txt")
+import fdplib.darab as darab
+data = darab.DarabData("<FILENAME>.txt")
 ```
 With this object, data can be easily accessed using the following methods. First, to get all of the variables in the dataset do ```data.list_vars()```
 
