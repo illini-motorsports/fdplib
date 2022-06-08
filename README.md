@@ -30,4 +30,4 @@ With this object, data can be easily accessed using the following methods. First
 
 The main method that you will use to interact with the data is ```data.get_var("<VARIABLE_NAME>")```
 This method returns a list of all the datapoints associated with the variable. Likewise ```data.get_var_np("<VARIABLE_NAME>")``` returns a numpy array of the data.
-There is an optional boolean variable called timeseries for both of the previously mentioned methods. If set to True this instead returns the data and the time values associated with it as a 2D array, much in the way matlab does.
+There is an optional boolean parameter called timeseries for both of the previously mentioned methods. If set to True this instead returns the data and the time values associated with it as a 2D array, much in the way matlab does.
