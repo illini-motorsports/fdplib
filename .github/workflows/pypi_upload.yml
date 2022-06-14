@@ -1,12 +1,13 @@
 name: Push Package to PyPi
-on: [push]
-jobs:
-  autoupdate-pypi:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - run: echo "The job was automatically triggered by a ${{ github.event_name }} event."
-      - run: python3 -m pip install build
-      - run: python3 -m pip install twine
-      - run: python3 -m build
-      - run: python3 -m twine upload -u ${{ secrets.PYPI_USER }} -p ${{ secrets.PYPI_PASS }} dist/*
+on:
+  pull_request:
+    types: [closed]jobs:
+autoupdate-pypi:
+  runs-on: ubuntu-latest
+  steps:
+    - uses: actions/checkout@v2
+    - run: echo "The job was automatically triggered by a ${{ github.event_name }} event."
+    - run: python3 -m pip install build
+    - run: python3 -m pip install twine
+    - run: python3 -m builds
+    - run: python3 -m twine upload -u ${{ secrets.PYPI_USER }} -p ${{ secrets.PYPI_PASS }} dist/*
