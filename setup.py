@@ -12,5 +12,6 @@ setup(
     packages = (find_packages()),
     install_requires=[
         "tqdm>=4.64.0"
+        "numpy>=1.22.1"
     ]
 )
