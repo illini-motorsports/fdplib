@@ -1,4 +1,5 @@
 from conftest import darab_data_simple
+import numpy as np
 import fdplib.darab as darab
 
 def test_DarabData_loading(darab_data_simple: darab.DarabData):
@@ -19,5 +20,16 @@ def test_DarabData_get_var_as_timeseries(darab_data_simple: darab.DarabData):
     assert len(xtime[0]) == 94
     assert len(xtime[1]) == 94
 
+
 def test_DarabData_get_var_np(darab_data_simple: darab.DarabData):
-    xtime = darab_data_simple.get_var("xtime", timeseries=True)
+    xtime = darab_data_simple.get_var_np("xtime")
+
+    assert type(xtime) == np.ndarray
+    assert xtime.shape == (94,)
+
+
+def test_DarabData_get_var_np_as_timeseries(darab_data_simple: darab.DarabData):
+    xtime = darab_data_simple.get_var_np("xtime", timeseries=True)
+
+    assert type(xtime) == np.ndarray
+    assert xtime.shape == (2,94)

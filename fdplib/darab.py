@@ -90,7 +90,7 @@ class DarabData:
                     return list(map(float,[row[idx] for row in self.data]))
 
 
-    def get_var_np(self, var, timeseries = False):
+    def get_var_np(self, var, timeseries = False) -> np.ndarray:
         """
         Preforms the same function as get_var except the data is returned 
         in a numpy array instead of a python list
