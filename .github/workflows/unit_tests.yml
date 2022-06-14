@@ -1,0 +1,10 @@
+name: Push Package to PyPi
+on:
+  push:
+    branches: [ $default-branch ]
+jobs:
+  autoupdate-pypi:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - run: echo "The job was automatically triggered by a ${{ github.event_name }} event."
