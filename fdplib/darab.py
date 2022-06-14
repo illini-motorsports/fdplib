@@ -110,11 +110,8 @@ class DarabData:
     def __getitem__(self, key) -> list:
         """
         Accessor function allows for variables to be accessed as though the
-        DarabData class was a dictionary, see the to_dict function
+        DarabData class was a dictionary, see the to_dict function for
+        implementation details
         """
 
-        idx = self.labels.index(key)
-        if idx == -1:
-            return None
-        else:
-            return [row[idx] for row in self.data]
+        return self.get_var(key)
