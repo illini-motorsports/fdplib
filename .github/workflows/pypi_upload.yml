@@ -1,6 +1,7 @@
 name: Push Package to PyPi
 on:
   pull_request:
+    branches: [ main ]
     types: [closed]
 jobs:
   autoupdate-pypi:
