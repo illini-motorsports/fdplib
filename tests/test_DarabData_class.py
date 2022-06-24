@@ -1,7 +1,13 @@
 from conftest import darab_data_simple
+import pytest
 import numpy as np
+import fdplib.errors as d_errors
 import fdplib.darab as darab
 import pickle
+
+def test_DarabData_loading_nofile():
+    with pytest.raises(d_errors.FileDoesNotExist) as e_info:
+        darab.DarabData("test_data/test.txt")
 
 def test_DarabData_loading(darab_data_simple: darab.DarabData):
     assert darab_data_simple.get_var("xtime") != None

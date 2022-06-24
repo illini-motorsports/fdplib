@@ -1,3 +1,4 @@
+from __future__ import annotations
 import tqdm
 import numpy as np
 from fdplib.errors import FileDoesNotExist
@@ -105,6 +106,11 @@ class DarabData:
         """
         
         return self.labels
+
+
+    # def sub_dataset(self, vars: list) -> DarabData:
+        
+    #     ret_vars = [var for var in vars if var in self.labels]
 
     
     def __getitem__(self, key) -> list:
