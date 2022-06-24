@@ -30,7 +30,7 @@ jobs:
         git config user.name "GitHub Actions Bot"
         git config user.email "<>"
     - name: update coverage svg
-      run: |
+      run:
         git add coverage.svg
         git commit -m"adding coverage badge"
         git push origin main
