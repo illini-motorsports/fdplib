@@ -1,3 +1,4 @@
+from regex import D
 from conftest import darab_data_simple
 import pytest
 import numpy as np
@@ -9,6 +10,7 @@ def test_DarabData_loading_nofile():
     with pytest.raises(d_errors.FileDoesNotExist) as e_info:
         darab.DarabData("test_data/test.txt")
 
+
 def test_DarabData_loading(darab_data_simple: darab.DarabData):
     assert darab_data_simple.get_var("xtime") != None
 
@@ -19,6 +21,28 @@ def test_DarabData_get_var(darab_data_simple: darab.DarabData):
     assert len(xtime) == 94
     assert type(xtime) == list
     assert xtime[0] == 0
+
+
+def test_DarabData_get_var_missing(darab_data_simple: darab.DarabData):
+    assert darab_data_simple.get_var("xtie") == None
+
+
+def test_DarabData_get_var_nonnum(darab_data_simple: darab.DarabData):
+    data = darab_data_simple.get_var("B_gsshdn_mcs")
+
+    assert data != None
+
+    assert data[0] == "FALSE"
+
+
+def test_DarabData_get_var_nonnum_timeseries(darab_data_simple: darab.DarabData):
+    data = darab_data_simple.get_var("B_gsshdn_mcs", timeseries=True)
+
+    assert data != None
+
+    assert data[1][0] == "FALSE"
+    assert data[0][0] == 0.0
+
 
 def test_DarabData_get_var_as_timeseries(darab_data_simple: darab.DarabData):
     xtime = darab_data_simple.get_var("xtime", timeseries=True)
@@ -40,6 +64,16 @@ def test_DarabData_get_var_np_as_timeseries(darab_data_simple: darab.DarabData):
 
     assert type(xtime) == np.ndarray
     assert xtime.shape == (2,94)
+
+
+def test_DarabData_to_dict(darab_data_simple: darab.DarabData):
+    xtime = darab_data_simple.get_var("xtime")
+    accx = darab_data_simple.get_var("accx")
+
+    darab_dict = darab_data_simple.to_dict()
+
+    assert xtime == list(map(float, darab_dict["xtime"]))
+    assert accx == list(map(float, darab_dict["accx"]))
 
 
 def test_DarabData_bracket_accessor(darab_data_simple: darab.DarabData):

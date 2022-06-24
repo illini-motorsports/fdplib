@@ -71,24 +71,24 @@ class DarabData:
         is passed as true
         """
         
-        idx = self.labels.index(var)
+        try:
+            idx = self.labels.index(var)
 
-        if idx == -1:
+        except:
             return None
 
-        else:
-            if self.data[idx][0][0] in letters:
-                if timeseries:
-                    return [list(map(float, [row[0] for row in self.data])),
-                                            [row[idx] for row in self.data]]
-                else:
-                    return [row[idx] for row in self.data]
+        if [row[idx] for row in self.data][0][0] in letters:
+            if timeseries:
+                return [list(map(float, [row[0] for row in self.data])),
+                                        [row[idx] for row in self.data]]
             else:
-                if timeseries:
-                    return [list(map(float, [row[0] for row in self.data])),
-                            list(map(float,[row[idx] for row in self.data]))]
-                else:
-                    return list(map(float,[row[idx] for row in self.data]))
+                return [row[idx] for row in self.data]
+        else:
+            if timeseries:
+                return [list(map(float, [row[0] for row in self.data])),
+                        list(map(float,[row[idx] for row in self.data]))]
+            else:
+                return list(map(float,[row[idx] for row in self.data]))
 
 
     def get_var_np(self, var, timeseries = False) -> np.ndarray:
