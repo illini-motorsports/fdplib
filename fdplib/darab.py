@@ -1,3 +1,4 @@
+from __future__ import annotations
 import tqdm
 import numpy as np
 from fdplib.errors import FileDoesNotExist
@@ -70,27 +71,27 @@ class DarabData:
         is passed as true
         """
         
-        idx = self.labels.index(var)
+        try:
+            idx = self.labels.index(var)
 
-        if idx == -1:
+        except:
             return None
 
-        else:
-            if self.data[idx][0][0] in letters:
-                if timeseries:
-                    return [list(map(float, [row[0] for row in self.data])),
-                                            [row[idx] for row in self.data]]
-                else:
-                    return [row[idx] for row in self.data]
+        if [row[idx] for row in self.data][0][0] in letters:
+            if timeseries:
+                return [list(map(float, [row[0] for row in self.data])),
+                                        [row[idx] for row in self.data]]
             else:
-                if timeseries:
-                    return [list(map(float, [row[0] for row in self.data])),
-                            list(map(float,[row[idx] for row in self.data]))]
-                else:
-                    return list(map(float,[row[idx] for row in self.data]))
+                return [row[idx] for row in self.data]
+        else:
+            if timeseries:
+                return [list(map(float, [row[0] for row in self.data])),
+                        list(map(float,[row[idx] for row in self.data]))]
+            else:
+                return list(map(float,[row[idx] for row in self.data]))
 
 
-    def get_var_np(self, var, timeseries = False):
+    def get_var_np(self, var, timeseries = False) -> np.ndarray:
         """
         Preforms the same function as get_var except the data is returned 
         in a numpy array instead of a python list
@@ -106,15 +107,17 @@ class DarabData:
         
         return self.labels
 
+
+    # def sub_dataset(self, vars: list) -> DarabData:
+        
+    #     ret_vars = [var for var in vars if var in self.labels]
+
     
     def __getitem__(self, key) -> list:
         """
         Accessor function allows for variables to be accessed as though the
-        DarabData class was a dictionary, see the to_dict function
+        DarabData class was a dictionary, see the to_dict function for
+        implementation details
         """
 
-        idx = self.labels.index(key)
-        if idx == -1:
-            return None
-        else:
-            return [row[idx] for row in self.data]
+        return self.get_var(key)
