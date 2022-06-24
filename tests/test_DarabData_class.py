@@ -1,4 +1,3 @@
-from regex import D
 from conftest import darab_data_simple
 import pytest
 import numpy as np
