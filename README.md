@@ -2,6 +2,7 @@
 ## _The python windarab loader_
 
 ![Unit Tests](https://github.com/illini-motorsports/fdplib/actions/workflows/unit_tests.yml/badge.svg)
+![Coverage Report](https://github.com/illini-motorsports/fdplib/blob/main/coverage.svg)
 
 Formula data processing library or fdplib for short is a library for accessing the custom text file format exported by Windarab by Bosch Motorsports
 
