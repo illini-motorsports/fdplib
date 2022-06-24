@@ -3,7 +3,7 @@ from setuptools import setup, find_packages
 setup(
     name = 'fdplib',
     url = 'https://github.com/illini-motorsports/fdplib',
-    version = 1.2,
+    version = 1.3,
     author = 'cmmeyer1800',
     author_email = 'collinmmeyer@gmail.com',
     python_requires = ">=3.6",
