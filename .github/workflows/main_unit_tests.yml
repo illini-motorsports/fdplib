@@ -1,9 +1,8 @@
 name: Run automated unit tests
 on:
-  push:
-    branches: [ main, dev ]
   pull_request:
     branches: [ main ]
+    types: [closed]
 
 jobs:
   tests:
@@ -19,7 +18,19 @@ jobs:
         python -m pip install --upgrade pip
         python -m pip install pytest
         python -m pip install pytest-cov
+        python -m pip install coverage-badge
         if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
     - name: Test with pytest
       run: |
         python -m pytest --cov=fdplib --cov-report term-missing tests/*
+        rm -f coverage.svg
+        coverage-badge -o coverage.svg
+    - name: setup git config
+      run: |
+        git config user.name "GitHub Actions Bot"
+        git config user.email "<>"
+    - name: update coverage svg
+      run: |
+        git add coverage.svg
+        git commit -m"updating coverage badge"
+        git push
