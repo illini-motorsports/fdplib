@@ -8,7 +8,7 @@ Formula data processing library or fdplib for short is a library for accessing t
 
 ## Installation
 
-FDPLib only requires tqdm (used as status bar for loading large data files)
+FDPLib requires tqdm (used as status bar for loading large data files) and Numpy (used to return data in numpy arrays)
 
 To install FDPLib use pip:
 
