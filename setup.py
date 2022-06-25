@@ -11,7 +11,7 @@ setup(
     long_description_content_type='text/markdown',
     packages = (find_packages(exclude='tests')),
     install_requires=[
-        "tqdm>=4.64.0"
-        "numpy>=1.22.1"
+        "tqdm>=4.0"
+        "numpy>=1.0"
     ]
 )
