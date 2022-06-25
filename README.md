@@ -35,3 +35,5 @@ There is an optional boolean parameter called timeseries for both of the previou
 
 
 ## Examples
+
+![example nmot data](https://github.com/illini-motorsports/fdplib/blob/main/assets/example_nmot.png)
