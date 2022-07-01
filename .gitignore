@@ -1,3 +1,4 @@
 dist
 *egg*
 __pycache__
+test.py

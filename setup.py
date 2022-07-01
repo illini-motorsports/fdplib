@@ -13,5 +13,6 @@ setup(
     install_requires=[
         "tqdm>=4.0"
         "numpy>=1.0"
+        "matplotlib>=3.5"
     ]
 )

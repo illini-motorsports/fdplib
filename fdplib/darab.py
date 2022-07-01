@@ -19,21 +19,21 @@ class DarabData:
 
 
         try:
-            num_lines = sum(1 for line in open(filename,'r'))
+            num_lines = sum(1 for line in open(filename, 'r', encoding="utf8", errors='ignore'))
 
         except:
-            raise FileDoesNotExist(filename) from None
+            raise FileDoesNotExist(filename)
 
         self.filename = filename
         self.data = []
         self.labels = []
 
-        print("Loading Data ...")
-        with open(filename,'r') as FILE:
+        with open(filename, 'r', encoding="utf8", errors='ignore') as FILE:
             if no_status:
                 for line in FILE:
                     self.data.append([item.strip().rstrip() for item in line.split("\t")])
             else:
+                print("Loading Data ...")
                 for line in tqdm.tqdm(FILE, total=num_lines):
                     self.data.append([item.strip().rstrip() for item in line.split("\t")])
 
