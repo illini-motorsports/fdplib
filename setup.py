@@ -3,7 +3,7 @@ from setuptools import setup, find_packages
 setup(
     name = 'fdplib',
     url = 'https://github.com/illini-motorsports/fdplib',
-    version = 1.5,
+    version = 1.6,
     author = 'cmmeyer1800',
     author_email = 'collinmmeyer@gmail.com',
     python_requires = ">=3.6",
@@ -13,5 +13,6 @@ setup(
     install_requires=[
         "tqdm>=4.0"
         "numpy>=1.0"
+        "matplotlib>=3.5"
     ]
 )
