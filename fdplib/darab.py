@@ -22,7 +22,7 @@ class DarabData:
             num_lines = sum(1 for line in open(filename,'r'))
 
         except:
-            raise FileDoesNotExist(filename)
+            raise FileDoesNotExist(filename) from None
 
         self.filename = filename
         self.data = []
