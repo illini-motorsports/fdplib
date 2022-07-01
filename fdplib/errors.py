@@ -4,4 +4,4 @@ class FileDoesNotExist(Exception):
         self.filename = filename
 
     def __str__(self):
-        return f"file \"{self.filename}\" does not exist or could not be opened"
+        return f"Filepath \"{self.filename}\" does not exist or could not be opened"
