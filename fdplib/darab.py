@@ -10,11 +10,11 @@ letters = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N',
 class DarabData:
 
 
-    def __init__(self, filename: str) -> None:
+    def __init__(self, filename: str, no_status: bool = False) -> None:
         """
         Initializes the Darabdata class by taking the txt file of data from darab
         and parses it into data, the labels corresponding to the data, and the
-        metadata about the data
+        metadata about the data, no status silences the tqdm loading bar
         """
 
 
@@ -30,8 +30,12 @@ class DarabData:
 
         print("Loading Data ...")
         with open(filename,'r') as FILE:
-            for line in tqdm.tqdm(FILE, total=num_lines):
-                self.data.append([item.strip().rstrip() for item in line.split("\t")])
+            if no_status:
+                for line in FILE:
+                    self.data.append([item.strip().rstrip() for item in line.split("\t")])
+            else:
+                for line in tqdm.tqdm(FILE, total=num_lines):
+                    self.data.append([item.strip().rstrip() for item in line.split("\t")])
 
         self.metadata = self.data[0:4]
         data_labels_pre = self.data[5]
