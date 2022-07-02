@@ -32,13 +32,5 @@ jobs:
         git config user.email "<>"
     - name: update coverage svg
       run: |
-        git diff --quiet coverage.svg
-        if [ $? -eq 1 ] 
-        then
-            echo difference in badge... adding
-            git add coverage.svg
-            git commit -m"updating coverage badge"
-            git push
-        else
-            echo no difference in badge... ignoring
-        fi
+        chmod +x update_svg.sh
+        ./update_svg.sh
