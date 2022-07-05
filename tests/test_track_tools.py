@@ -39,8 +39,8 @@ def test_Track_coords_from_gps(track_data_path):
     # @TODO 
     # NEED TO FIX
     # np.testing.assert_array_equal(good_gps, gps)
-    assert list(good_gps[0]) == list(gps[0])
-    assert list(good_gps[1]) == list(gps[1])
+    assert list(np.around(good_gps[0], 4)) == list(np.around(gps[0], 4))
+    assert list(np.around(good_gps[1], 4)) == list(np.around(gps[1], 4))
 
 def test_Track_coords_from_acc(track_data_path):
     t = Track(track_data_path)
@@ -52,8 +52,8 @@ def test_Track_coords_from_acc(track_data_path):
     # @TODO 
     # NEED TO FIX
     # np.testing.assert_array_equal(good_acc, acc)
-    assert list(good_acc[0]) == list(acc[0])
-    assert list(good_acc[1]) == list(acc[1])
+    assert list(np.around(good_acc[0], 4)) == list(np.around(acc[0], 4))
+    assert list(np.around(good_acc[1], 4)) == list(np.around(acc[1], 4))
 
 def test_Track_coords_from_acc_w_yaw(track_data_path):
     t = Track(track_data_path)
@@ -69,8 +69,8 @@ def test_Track_coords_from_acc_w_yaw(track_data_path):
     # NEED TO FIX
     # np.testing.assert_array_equal(good_acc, acc)
     # np.testing.assert_array_equal(good_yaw, yaw)
-    assert list(good_acc[0]) == list(acc[0])
-    assert list(good_yaw) == list(yaw)
+    assert list(np.around(good_acc[0], 4)) == list(np.around(acc[0], 4))
+    assert list(np.around(good_yaw, 4)) == list(np.around(yaw, 4))
 
 def test_Track_radius_from_gps_coords(track_data_path):
     t = Track(track_data_path)
@@ -83,7 +83,7 @@ def test_Track_radius_from_gps_coords(track_data_path):
 
     # np.testing.assert_array_equal(good_rads, rads)
 
-    assert list(good_rads) == list(rads)
+    assert list(np.around(good_rads, 4)) == list(np.around(rads, 4))
 
 def test_Track_get_lap_bounds(track_data_path):
     t = Track(track_data_path)
