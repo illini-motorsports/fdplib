@@ -193,7 +193,7 @@ class Track:
         pos_x = np.zeros(len(acc_long))
         yaw = np.zeros(len(acc_long))
 
-        yaw[0] = 180
+        yaw[0] = 240
         vel_x[0] = speed[0]*sin(radians(yaw[0]))
         vel_y[0] = speed[0]*cos(radians(yaw[0]))
 

@@ -7,8 +7,4 @@ def darab_data_simple() -> darab.DarabData:
 
 @pytest.fixture
 def track_data_path() -> str:
-    return "/Users/collin/code/fdplib/test_data/May_MIS_END_MATT_wYAW.txt"
-
-@pytest.fixture
-def track_data_path_missing_xtime() -> str:
-    return "/Users/collin/code/fdplib/test_data/May_MIS_END_MATT_wYAW.txt"
+    return "test_data/May_MIS_END_MATT_wYAW.txt"
