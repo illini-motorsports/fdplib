@@ -79,6 +79,18 @@ def test_Track_radius_from_gps_coords(track_data_path):
 
     np.testing.assert_array_equal(good_rads, rads)
 
+def test_Track_get_lap_bounds(track_data_path):
+    t = Track(track_data_path)
+    bounds = t.get_lap_bounds(1)
+    
+    assert bounds == (77, 14099)
+
+def test_Track_get_lap_bounds_none(track_data_path):
+    t = Track(track_data_path)
+    bounds = t.get_lap_bounds(2)
+    
+    assert bounds == None
+
 
 # def test_plot_track_full(track_data_path):
 #     t = Track(track_data_path)

@@ -238,10 +238,10 @@ class Track:
             if (self._coords_dist(s_x, x, s_y, y) < 12):
                 if not in_rad:
                     curr_lap +=1
-                    lap_start_idx = idx
                     in_rad = True
             else:
                 if in_rad:
+                    lap_start_idx = idx
                     in_rad = False
             
             if curr_lap == lap_num:
@@ -253,7 +253,7 @@ class Track:
     
     # -------------------------------------------------------------------------
 
-    def simulate(self) -> None:
+    def simulate(self) -> None: # pragma: no cover
         WIDTH = 1680
         HEIGHT = 1000
         FPS = 60

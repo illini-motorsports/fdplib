@@ -10,7 +10,7 @@ import numpy as np
 
 
 
-class GPSCoord:
+class GPSCoord: # pragma: no cover
     """A class to store and manipulate latitude and longitude data"""
 
     # -------------------------------------------------------------------------
@@ -85,7 +85,7 @@ class GPSCoord:
 
 
 
-class Vector:
+class Vector: # pragma: no cover
     """A class representing a line segment or vector between two points
        start and end, storing it as x and y representing deltas from the origin
        on the x and y axis"""
