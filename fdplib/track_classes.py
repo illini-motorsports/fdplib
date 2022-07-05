@@ -1,7 +1,7 @@
 from __future__ import annotations
 import matplotlib.pyplot as plt
 from math import radians, tan
-
+import numpy as np
 
 class GPSCoord:
     def __init__(self, init_coords: tuple) -> None:
@@ -46,3 +46,24 @@ class GPSCoord:
         y_dist = tan(d_lat)*6371
 
         return (x_dist, y_dist)
+
+class Vector:
+    
+    def __init__(self, start: np.array, end: np.array) -> None:
+        self.start = start
+        self.end = end
+
+        self.x = end[0]-start[0]
+        self.y = end[1]-start[1]
+
+    def len_sq(self) -> float:
+        return (self.x**2) + (self.y**2)
+
+    def len(self) -> float:
+        return np.sqrt((self.x**2) + (self.y**2))
+
+    def dot(self, other: Vector):
+        return np.dot([self.x, self.y], [other.x, other.y])
+
+    def cross(self, other: Vector):
+        return np.cross([self.x, self.y], [other.x, other.y])
