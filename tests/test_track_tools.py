@@ -83,7 +83,7 @@ def test_Track_radius_from_gps_coords(track_data_path):
 
     # np.testing.assert_array_equal(good_rads, rads)
 
-    assert list(np.around(good_rads, 4)) == list(np.around(rads, 4))
+    assert list(np.around(good_rads, 1)) == list(np.around(rads, 1))
 
 def test_Track_get_lap_bounds(track_data_path):
     t = Track(track_data_path)
