@@ -7,15 +7,29 @@ from fdplib.track_classes import GPSCoord, Vector
 from math import sin, cos, radians
 
 
+
+# =============================================================================
+# =============================================================================
+
+
+
 class Track:
-    
-    def __init__(self):
-       pass
+    """Class representing a track on which our formula vehicle travels.
+       It is initialized by a data file with several necessary data points.
+       It allows the user to calculate and display many intriguing aspects of the data."""
+
+    def __init__(self, filepath: str = None) -> None:
+        """If a path is provided, initializes the data from file path"""
+        if filepath:
+            self._data = DarabData(filepath, no_status=True)
+
+    # -------------------------------------------------------------------------
 
     def from_data(self, filepath: str) -> None:
         """import darab text file and store darabdata in obj"""
-        
         self._data = DarabData(filepath, no_status=True)
+
+    # -------------------------------------------------------------------------
 
     def plot_track(self, t_bound: tuple = None) -> None:
         """plot a map from gps data in matplotlib"""
@@ -40,6 +54,8 @@ class Track:
             long = long[start_idx:end_idx]
 
         plt.plot(lat, long)
+
+    # -------------------------------------------------------------------------
 
     def plot_track_heatmap(self, t_bound: tuple = None, direct_arrow: bool = None,
                            heat_source: np.array = None) -> None:
@@ -96,8 +112,10 @@ class Track:
 
         plt.scatter(long, lat, c=c, cmap='magma')
         plt.colorbar()
+    
+    # -------------------------------------------------------------------------
 
-    def _calc_track_direction(self, long, lat, center):
+    def _calc_track_direction(self, long, lat, center) -> bool:
         """uses lat and long data to determine if direction of travel is clockwise
            or counter-clockwise. This is done by analyzing the directive of the change
            of angle from a static point in the middle of the track."""
@@ -108,6 +126,8 @@ class Track:
         mean = np.mean(np.gradient(angle, 0.00001))
         
         return (mean > 0)
+    
+    # -------------------------------------------------------------------------
 
     def coords_from_gps(self) -> np.array:
         """converts longitude and latitude data to x and y displacements
@@ -139,6 +159,8 @@ class Track:
 
         return np.vstack((x_vals, y_vals))
 
+    # -------------------------------------------------------------------------
+
     def plot_coords(self, coords: np.array) -> None:
         """plots x and y displacement coordinates"""
         plt.plot(coords[0], coords[1], label="Position")
@@ -148,7 +170,9 @@ class Track:
         plt.title("Track map, distance from origin (m)")
         plt.legend()
 
-    def coords_from_acc(self, ret_yaw: bool = False):
+    def coords_from_acc(self, ret_yaw: bool = False) -> np.array:
+        """calculates the vehicles path from acceleration data provided by the IMU.
+           If ret_yaw is true also return the corresponding yaw data."""
         acc_lat = self._data.get_var("accy")
         acc_long = self._data.get_var("accx")
         speed = self._data.get_var("speed")
@@ -185,8 +209,12 @@ class Track:
             return np.vstack((pos_x, pos_y)), yaw
         else:
             return np.vstack((pos_x, pos_y))
+    
+    # -------------------------------------------------------------------------
 
     def radius_from_gps_coords(self, coords: np.array) -> np.array:
+        """Calculates the radius of the current turn that the vehicle is in from gps data.
+           This is done using a 3 points on a circle calculation and iterates through all the data passed"""
         x_c = coords[0]
         y_c = coords[1]
         coords = np.vstack((np.array(x_c[::5]),np.array(y_c[::5])))
@@ -218,7 +246,7 @@ class Track:
             for i in range(5):
                 out.append(r)
 
-        # x_c = coords[0] RANDOM ALGORITHM THAT KINDA LOOK RIGHT BUT NOT SURE WHY
+        # x_c = coords[0]       #RANDOM ALGORITHM THAT KINDA LOOKS RIGHT BUT NOT SURE WHY
         # y_c = coords[1]
         # coords = np.vstack((np.array(x_c[::5]),np.array(y_c[::5])))
         # c = len(coords[0])
@@ -243,8 +271,12 @@ class Track:
         #         out.append(rad)
 
         return np.array(out)
+
+    # -------------------------------------------------------------------------
     
     def get_lap_bounds(self, lap_num: int) -> np.array:
+        """Calculate the indexs in the data corresponding to the (start,end) of
+           the requested lap given by lap_num."""
         lat = self._data.get_var("GPS_Lat")
         long = self._data.get_var("GPS_Long")
         xtime = self._data.get_var("xtime")
@@ -265,23 +297,34 @@ class Track:
         curr_lap = 0
         in_rad = True
         idx = 0
-        lap_start_time = xtime[0]
+        lap_start_idx = 0
 
         for x, y in zip(coords_x[1:], coords_y[1:]): #iterate through both x and y at same time
             if (self._coords_dist(s_x, x, s_y, y) < 12):
                 if not in_rad:
                     curr_lap +=1
+                    lap_start_idx = idx
                     in_rad = True
             else:
                 if in_rad:
                     in_rad = False
             
             if curr_lap == lap_num:
-                return (0, idx)
+                return (lap_start_idx, idx)
 
             idx += 1
     
         return None
+    
+    # -------------------------------------------------------------------------
 
     def _coords_dist(self, x1: float, x2: float, y1: float, y2: float) -> float:
+        """Returns the distance betweens two x and y coordinates."""
         return np.sqrt((x2-x1)**2 + (y2-y1)**2)
+
+    # -------------------------------------------------------------------------
+
+
+
+# =============================================================================
+# =============================================================================
