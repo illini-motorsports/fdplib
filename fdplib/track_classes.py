@@ -10,8 +10,10 @@ import numpy as np
 
 
 
-class GPSCoord:
+class GPSCoord: # pragma: no cover
     """A class to store and manipulate latitude and longitude data"""
+
+    # -------------------------------------------------------------------------
 
     def __init__(self, init_coords: tuple) -> None:
         """initializes the coords with latitude and longitude by a tuple
@@ -83,10 +85,12 @@ class GPSCoord:
 
 
 
-class Vector:
+class Vector: # pragma: no cover
     """A class representing a line segment or vector between two points
        start and end, storing it as x and y representing deltas from the origin
        on the x and y axis"""
+
+    # -------------------------------------------------------------------------
 
     def __init__(self, start: np.array, end: np.array) -> None:
         """calculate x and y delta from start and end (2,) np arrays"""

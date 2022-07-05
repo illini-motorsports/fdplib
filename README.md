@@ -2,7 +2,7 @@
 ## _The python windarab loader_
 
 [![Unit Tests](https://github.com/illini-motorsports/fdplib/actions/workflows/main_unit_tests.yml/badge.svg)](https://github.com/illini-motorsports/fdplib/actions/workflows/main_unit_tests.yml)
-![Coverage Report](https://github.com/illini-motorsports/fdplib/blob/main/coverage.svg)
+![Coverage Report](https://raw.githubusercontent.com/illini-motorsports/fdplib/main/coverage.svg)
 
 Formula data processing library or fdplib for short is a library for accessing the custom text file format exported by Windarab by Bosch Motorsports
 
@@ -36,4 +36,4 @@ There is an optional boolean parameter called timeseries for both of the previou
 
 ## Examples
 
-![example nmot data](https://github.com/illini-motorsports/fdplib/blob/main/assets/example_nmot.png)
+![example nmot data](https://raw.githubusercontent.com/illini-motorsports/fdplib/main/assets/example_nmot.png)

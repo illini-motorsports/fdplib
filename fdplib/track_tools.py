@@ -3,9 +3,8 @@ import matplotlib.pyplot as plt
 import matplotlib.patches as patches
 from fdplib.errors import VariableNotPresent
 from fdplib.darab import DarabData
-from fdplib.track_classes import GPSCoord, Vector
+from fdplib.track_classes import GPSCoord
 from math import sin, cos, radians
-
 
 
 # =============================================================================
@@ -18,67 +17,45 @@ class Track:
        It is initialized by a data file with several necessary data points.
        It allows the user to calculate and display many intriguing aspects of the data."""
 
-    def __init__(self, filepath: str = None) -> None:
+    # -------------------------------------------------------------------------
+
+    def __init__(self, filepath: str) -> None:
         """If a path is provided, initializes the data from file path"""
-        if filepath:
-            self._data = DarabData(filepath, no_status=True)
-
-    # -------------------------------------------------------------------------
-
-    def from_data(self, filepath: str) -> None:
-        """import darab text file and store darabdata in obj"""
         self._data = DarabData(filepath, no_status=True)
+        
+        e = self._data_errors()
+        if e:
+            raise VariableNotPresent(str(e))
 
     # -------------------------------------------------------------------------
 
-    def plot_track(self, t_bound: tuple = None) -> None:
-        """plot a map from gps data in matplotlib"""
-        # ms6 vars : GPS_Lat, GPS_Long
-        lat = self._data.get_var("GPS_Lat")
-        long = self._data.get_var("GPS_Long")
-
-        if not lat:
-            raise VariableNotPresent("GPS_Lat")
-        if not long:
-            raise VariableNotPresent("GPS_Long")
-
-        if not t_bound is None:
-            xtime = self._data.get_var("xtime")
-            if not xtime:
-                raise VariableNotPresent("xtime")
-            xtime = np.array(xtime)
-            start_idx = np.argmin(np.abs(xtime-t_bound[0]))
-            end_idx = np.argmin(np.abs(xtime-t_bound[1]))
-
-            lat = lat[start_idx:end_idx]
-            long = long[start_idx:end_idx]
-
-        plt.plot(lat, long)
+    # def plot_track(self, t_bound: tuple = None) -> None:      |   DEPRECATED! DATA
+    #     """plot a map from gps data in matplotlib"""          |   SHOULD BE OBTAINED
+    #     # ms6 vars : GPS_Lat, GPS_Long                        |   FROM GPS OR ACC THEN
+    #     lat = self._data.get_var_np("GPS_Lat")                |   PLOTTED USING:
+    #     long = self._data.get_var_np("GPS_Long")              |   PLOT COORDS
+    #                                                           |
+    #     if not t_bound is None:                               |
+    #         xtime = self._data.get_var_np("xtime")            |
+    #         start_idx = np.argmin(np.abs(xtime-t_bound[0]))   |
+    #         end_idx = np.argmin(np.abs(xtime-t_bound[1]))     |
+    #                                                           |
+    #         lat = lat[start_idx:end_idx]                      |
+    #         long = long[start_idx:end_idx]                    |
+    #                                                           |
+    #     plt.plot(lat, long)                                   |
 
     # -------------------------------------------------------------------------
 
     def plot_track_heatmap(self, t_bound: tuple = None, direct_arrow: bool = None,
                            heat_source: np.array = None) -> None:
         """plot a heatmap of speed from gps data in matplotlib"""
-        lat = self._data.get_var("GPS_Lat")
-        long = self._data.get_var("GPS_Long")
+        lat = self._data.get_var_np("GPS_Lat")
+        long = self._data.get_var_np("GPS_Long")
         speed = self._data.get_var("speed")
 
-        if not lat:
-            raise VariableNotPresent("GPS_Lat")
-        if not long:
-            raise VariableNotPresent("GPS_Long")
-        if not speed:
-            raise VariableNotPresent("speed")
-
-        lat = np.array(lat)
-        long = np.array(long)
-
         if not (t_bound is None):
-            xtime = self._data.get_var("xtime")
-            if not xtime:
-                raise VariableNotPresent("xtime")
-            xtime = np.array(xtime)
+            xtime = self._data.get_var_np("xtime")
             start_idx = np.argmin(np.abs(xtime-t_bound[0]))
             end_idx = np.argmin(np.abs(xtime-t_bound[1]))
 
@@ -115,36 +92,11 @@ class Track:
     
     # -------------------------------------------------------------------------
 
-    def _calc_track_direction(self, long, lat, center) -> bool:
-        """uses lat and long data to determine if direction of travel is clockwise
-           or counter-clockwise. This is done by analyzing the directive of the change
-           of angle from a static point in the middle of the track."""
-        vector_x = long-center[0]
-        vector_y = lat-center[1]
-
-        angle = np.arctan(vector_y/vector_x)
-        mean = np.mean(np.gradient(angle, 0.00001))
-        
-        return (mean > 0)
-    
-    # -------------------------------------------------------------------------
-
     def coords_from_gps(self) -> np.array:
         """converts longitude and latitude data to x and y displacements
            coordinates from the first location coordinate"""
-        lat = self._data.get_var("GPS_Lat")
-        long = self._data.get_var("GPS_Long")
-        speed = self._data.get_var("speed")
-
-        if not lat:
-            raise VariableNotPresent("GPS_Lat")
-        if not long:
-            raise VariableNotPresent("GPS_Long")
-        if not speed:
-            raise VariableNotPresent("speed")
-
-        lat = np.array(lat)
-        long = np.array(long)
+        lat = self._data.get_var_np("GPS_Lat")
+        long = self._data.get_var_np("GPS_Long")
 
         start_coord = GPSCoord((lat[0], long[0]))
         coords = [GPSCoord((lati, longi)) for lati, longi in zip(lat, long)][1:]
@@ -161,31 +113,13 @@ class Track:
 
     # -------------------------------------------------------------------------
 
-    def plot_coords(self, coords: np.array) -> None:
-        """plots x and y displacement coordinates"""
-        plt.plot(coords[0], coords[1], label="Position")
-        plt.plot(0, 0, marker="o", markersize=5, markeredgecolor="red", markerfacecolor="black", label="Start/Origin")
-        plt.xlabel("x distance (m)")
-        plt.ylabel("y distance (m)")
-        plt.title("Track map, distance from origin (m)")
-        plt.legend()
-
     def coords_from_acc(self, ret_yaw: bool = False) -> np.array:
         """calculates the vehicles path from acceleration data provided by the IMU.
            If ret_yaw is true also return the corresponding yaw data."""
-        acc_lat = self._data.get_var("accy")
-        acc_long = self._data.get_var("accx")
-        speed = self._data.get_var("speed")
-        yaw_rate = self._data.get_var("yaw")
-
-        if not acc_lat:
-            raise VariableNotPresent("accy")
-        if not acc_long:
-            raise VariableNotPresent("accx")
-        if not speed:
-            raise VariableNotPresent("speed")
-        if not yaw_rate:
-            raise VariableNotPresent("yaw")
+        acc_lat = self._data.get_var_np("accy")
+        acc_long = self._data.get_var_np("accx")
+        speed = self._data.get_var_np("speed")
+        yaw_rate = self._data.get_var_np("yaw")
 
         vel_y = np.zeros(len(acc_long))
         pos_y = np.zeros(len(acc_long))
@@ -209,6 +143,17 @@ class Track:
             return np.vstack((pos_x, pos_y)), yaw
         else:
             return np.vstack((pos_x, pos_y))
+
+    # -------------------------------------------------------------------------
+
+    def plot_coords(self, coords: np.array) -> None:
+        """plots x and y displacement coordinates"""
+        plt.plot(coords[0], coords[1], label="Position")
+        plt.plot(coords[0][0], coords[1][0], marker="o", markersize=5, markeredgecolor="red", markerfacecolor="black", label="Start/Origin")
+        plt.xlabel("x distance (m)")
+        plt.ylabel("y distance (m)")
+        plt.title("Track map, distance from origin (m)")
+        plt.legend()
     
     # -------------------------------------------------------------------------
 
@@ -277,16 +222,6 @@ class Track:
     def get_lap_bounds(self, lap_num: int) -> np.array:
         """Calculate the indexs in the data corresponding to the (start,end) of
            the requested lap given by lap_num."""
-        lat = self._data.get_var("GPS_Lat")
-        long = self._data.get_var("GPS_Long")
-        xtime = self._data.get_var("xtime")
-
-        if not lat:
-            raise VariableNotPresent("GPS_Lat")
-        if not long:
-            raise VariableNotPresent("GPS_Long")
-        if not xtime:
-            raise VariableNotPresent("xtime")
 
         coords = self.coords_from_gps()
         coords_x = coords[0]
@@ -303,10 +238,10 @@ class Track:
             if (self._coords_dist(s_x, x, s_y, y) < 12):
                 if not in_rad:
                     curr_lap +=1
-                    lap_start_idx = idx
                     in_rad = True
             else:
                 if in_rad:
+                    lap_start_idx = idx
                     in_rad = False
             
             if curr_lap == lap_num:
@@ -318,13 +253,111 @@ class Track:
     
     # -------------------------------------------------------------------------
 
-    def _coords_dist(self, x1: float, x2: float, y1: float, y2: float) -> float:
-        """Returns the distance betweens two x and y coordinates."""
-        return np.sqrt((x2-x1)**2 + (y2-y1)**2)
+    def simulate(self) -> None: # pragma: no cover
+        WIDTH = 1680
+        HEIGHT = 1000
+        FPS = 60
+        STEP = 5
+        WHITE = (255, 255, 255)
+        BLACK = (0, 0, 0)
+        RED = (255, 0, 0)
+        GREEN = (0, 255, 0)
+        BLUE = (0, 0, 255)
+
+        import pygame
+
+        pygame.init()
+        pygame.mixer.init()
+        screen = pygame.display.set_mode((WIDTH, HEIGHT))
+        pygame.display.set_caption("<Your game>")
+        clock = pygame.time.Clock()
+
+        carImg = pygame.image.load("/Users/collin/code/fdplib/assets/car_sprite.png")
+
+        def draw_img(image, x, y, angle):
+            rotated_image = pygame.transform.rotate(image, angle) 
+            screen.blit(rotated_image, rotated_image.get_rect(center=image.get_rect(topleft=(x, y)).center).topleft)
+
+
+        coords, yaw = self.coords_from_acc(ret_yaw=True)
+        coords[0] += -1*np.min(coords[0]) # | bring all values into positive area
+        coords[1] += -1*np.min(coords[1]) # |
+
+        coords[0] *= (WIDTH * 0.9)/np.max(coords[0])
+        coords[1] *= (HEIGHT * 0.9)/np.max(coords[1])
+
+        idx = 0
+        max_idx = len(coords[0])
+        
+        running = True
+        while running:
+
+            clock.tick(FPS)
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    running = False
+
+
+            screen.fill(WHITE)
+
+            draw_img(carImg, int(coords[0][idx]), int(coords[1][idx]), yaw[idx])
+
+            if idx+STEP >= max_idx:
+                idx = 0
+            else:
+                idx += STEP
+
+            pygame.display.flip()       
+
+        pygame.quit()
 
     # -------------------------------------------------------------------------
 
+    def _coords_dist(self, x1: float, x2: float, y1: float, y2: float) -> float:
+        """Returns the distance betweens two x and y coordinates."""
+        return np.sqrt((x2-x1)**2 + (y2-y1)**2)
+        
+    # -------------------------------------------------------------------------
 
+    def _calc_track_direction(self, long, lat, center) -> bool:
+        """uses lat and long data to determine if direction of travel is clockwise
+           or counter-clockwise. This is done by analyzing the directive of the change
+           of angle from a static point in the middle of the track."""
+        vector_x = long-center[0]
+        vector_y = lat-center[1]
+
+        angle = np.arctan(vector_y/vector_x)
+        mean = np.mean(np.gradient(angle, 0.00001))
+        
+        return (mean > 0)
+
+    # -------------------------------------------------------------------------
+
+    def _data_errors(self) -> list:
+        """Goes through the data in the dataset and ensures all necessary variabls
+           are present."""
+        ret = []
+        if not self._data.get_var("xtime"):
+            ret.append("xtime")
+        if not self._data.get_var("GPS_Long"):
+            ret.append("GPS_Long")
+        if not self._data.get_var("GPS_Lat"):
+            ret.append("GPS_Lat")
+        if not self._data.get_var("speed"):
+            ret.append("speed")
+        if not self._data.get_var("accx"):
+            ret.append("accx")
+        if not self._data.get_var("accy"):
+            ret.append("accy")
+        if not self._data.get_var("yaw"):
+            ret.append("yaw")
+
+        if len(ret) == 0:
+            return None
+        else:
+            return ret
+
+    # -------------------------------------------------------------------------
 
 # =============================================================================
 # =============================================================================
