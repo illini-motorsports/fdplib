@@ -1,11 +1,11 @@
 import pygame
 import numpy as np
 from fdplib.track_tools import Track
-from pygame import gfxdraw
 
-WIDTH = 1650
-HEIGHT = 900
+WIDTH = 1680
+HEIGHT = 1000
 FPS = 60
+STEP = 5
 WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
 RED = (255, 0, 0)
@@ -21,31 +21,6 @@ def sim_track(track: Track):
 
     carImg = pygame.image.load("/Users/collin/code/fdplib/assets/car_sprite.png")
 
-    def car(x,y):
-        screen.blit(carImg, (x,y))
-
-    def blitRotate(surf, image, pos, originPos, angle):
-        # offset from pivot to center
-        image_rect = image.get_rect(topleft = (pos[0] - originPos[0], pos[1]-originPos[1]))
-        offset_center_to_pivot = pygame.math.Vector2(pos) - image_rect.center
-        
-        # roatated offset from pivot to center
-        rotated_offset = offset_center_to_pivot.rotate(-angle)
-
-        # roatetd image center
-        rotated_image_center = (pos[0] - rotated_offset.x, pos[1] - rotated_offset.y)
-
-        # get a rotated image
-        rotated_image = pygame.transform.rotate(image, angle)
-        rotated_image_rect = rotated_image.get_rect(center = rotated_image_center)
-
-        # rotate and blit the image
-        surf.blit(rotated_image, rotated_image_rect)
-    
-        # draw rectangle around the image
-        #pygame.draw.rect(surf, (255, 0, 0), (*rotated_image_rect.topleft, *rotated_image.get_size()),2)
-
-
     def draw_img(image, x, y, angle):
         rotated_image = pygame.transform.rotate(image, angle) 
         screen.blit(rotated_image, rotated_image.get_rect(center=image.get_rect(topleft=(x, y)).center).topleft)
@@ -55,8 +30,8 @@ def sim_track(track: Track):
     coords[0] += -1*np.min(coords[0]) # | bring all values into positive area
     coords[1] += -1*np.min(coords[1]) # |
 
-    coords[0] *= WIDTH/np.max(coords[0])
-    coords[1] *= HEIGHT/np.max(coords[1])
+    coords[0] *= (WIDTH * 0.9)/np.max(coords[0])
+    coords[1] *= (HEIGHT * 0.9)/np.max(coords[1])
 
     idx = 0
     max_idx = len(coords[0])
@@ -74,13 +49,10 @@ def sim_track(track: Track):
 
         draw_img(carImg, int(coords[0][idx]), int(coords[1][idx]), yaw[idx])
 
-        # for x, y in zip(coords[0], coords[1]):
-        #     gfxdraw.pixel(screen, int(x), int(y), WHITE)
-
-        if idx+10 >= max_idx:
+        if idx+STEP >= max_idx:
             idx = 0
         else:
-            idx += 10
+            idx += STEP
 
         pygame.display.flip()       
 
