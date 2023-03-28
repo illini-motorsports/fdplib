@@ -10,7 +10,7 @@ letters = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N',
 class DarabData:
 
 
-    def __init__(self, filename: str, no_status: bool = False) -> None:
+    def __init__(self, filename: str, no_status: bool = True) -> None:
         """
         Initializes the Darabdata class by taking the txt file of data from darab
         and parses it into data, the labels corresponding to the data, and the
