@@ -82,7 +82,7 @@ class Track:
                                                 **{"arrowstyle":"Simple, tail_width=0.5, head_width=4, head_length=8"})
             plt.gca().add_patch(curl_arrow)
 
-        if heat_source:
+        if type(heat_source) != None:
             c = heat_source
         else:
             c = speed
@@ -165,56 +165,34 @@ class Track:
         coords = np.vstack((np.array(x_c[::5]),np.array(y_c[::5])))
         rads = []
 
-        for idx in range(2, len(coords[0])):
-            p1 = coords[:,idx-2]
-            p2 = coords[:,idx-1]
-            p3 = coords[:,idx]
-
-            x1, y1 = p1[0], p1[1]
-            x2, y2 = p2[0], p2[1]
-            x3, y3 = p3[0], p3[1]
-
-            A = x1*(y2-y3) - y1*(x2-x3) + x2*y3 - x3*y2
-            B = (x1**2 + y1**2)*(y3-y2) + (x2**2 + y2**2)*(y1-y3) + (x3**2+y3**2)*(y2-y1)
-            C = (x1**2 + y1**2)*(x2-x3) + (x2**2 + y2**2)*(x3-x1) + (x3**2+y3**2)*(x1-x2)
-            D = (x1**2 + y1**2)*(x3*y2 - x2*y3) + (x2**2 + y2**2)*(x1*y3 - x3*y1) + (x3**2+y3**2)*(x2*y1-x1*y2)
-
-            if A != 0:
-                R = np.sqrt((B**2 + C**2 - 4*A*D)/(4*(A**2)))
-            else:
-                R = 5000
+        for idx in range(1, len(coords[0])-1):
             
-            rads.append(R)
+            x1, y1 = coords[0][idx-1], coords[1][idx-1]
+            x2, y2 = coords[0][idx], coords[1][idx]
+            x3, y3 = coords[0][idx+1], coords[1][idx+1]
+            c = (x1-x2)**2 + (y1-y2)**2
+            a = (x2-x3)**2 + (y2-y3)**2
+            b = (x3-x1)**2 + (y3-y1)**2
+            ar = a**0.5
+            br = b**0.5
+            cr = c**0.5 
+            r = ar*br*cr / ((ar+br+cr)*(-ar+br+cr)*(ar-br+cr)*(ar+br-cr))**0.5
+            rads.append(r)
 
-        out = [0] * 10
+        rads.append(300)
+        rads.append(300)
+
+        rads = np.clip(rads, 5, 100)
+
+        plt.scatter(coords[0], coords[1], c=rads, cmap='magma')
+
+        out = [300] * 7
         for r in rads:
             for i in range(5):
                 out.append(r)
 
-        # x_c = coords[0]       #RANDOM ALGORITHM THAT KINDA LOOKS RIGHT BUT NOT SURE WHY
-        # y_c = coords[1]
-        # coords = np.vstack((np.array(x_c[::5]),np.array(y_c[::5])))
-        # c = len(coords[0])
-        # p = coords.T
-
-        # c_dist = np.zeros(c)
-        # b_dist = np.zeros(c)
-        # a_dist = np.zeros(c)
-        # A_angle = np.zeros(c)
-        # R = np.zeros(c)
-
-        # for i in range(c-2):
-        #     c_dist[i] = ((p[i+1,0]-p[i,0])**2+(p[i+1,1]-p[i,1])**2)**(0.5)
-        #     b_dist[i] = ((p[i+2,0]-p[i+1,0])**2+(p[i+2,1]-p[i+1,1])**2)**(0.5)
-        #     a_dist[i] = ((p[i+2,0]-p[i,0])**2+(p[i+2,1]-p[i,1])**2)**(0.5)
-        #     A_angle[i] = np.arccos(radians(b_dist[i]**2 + c_dist[i]**2-a_dist[i]**2))/(2*b_dist[i]*c_dist[i])
-        #     R[i] = a_dist[i]/(2*np.sin(radians(180-A_angle[i])))
-
-        # out = []
-        # for rad in R:
-        #     for i in range(5):
-        #         out.append(rad)
-
+        out = np.clip(out, 5, 300)
+        
         return np.array(out)
 
     # -------------------------------------------------------------------------
@@ -253,7 +231,9 @@ class Track:
     
     # -------------------------------------------------------------------------
 
+
     def simulate(self) -> None: # pragma: no cover
+        """Simulate lap data using pygame"""
         WIDTH = 1680
         HEIGHT = 1000
         FPS = 60
